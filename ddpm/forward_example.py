@@ -1,8 +1,4 @@
-import torch
 import numpy as np
-import torchvision
-from torch import nn
-from torch import math
 from matplotlib import pyplot as plt
 
 from torchvision.transforms import transforms
@@ -43,6 +39,7 @@ def show_once():
         axes[i][1].set_title(f"Mixed: {step}")
     plt.tight_layout()
     plt.savefig("outputs/once_forward_example.png")
+
 
 def show_forward():
     dataset = LFWDataset(
