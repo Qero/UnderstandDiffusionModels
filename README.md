@@ -1,1 +1,1 @@
-# UnderstandDiffusionModels
+# Understand Diffusion Models
