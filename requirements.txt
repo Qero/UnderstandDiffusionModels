@@ -1,2 +1,7 @@
 torch
 torchvision
+tensorboard
+scipy
+matplotlib
+tensorflow-io[tensorflow]
+matplotlib
