@@ -6,5 +6,6 @@
     "python.linting.flake8Args": [
         "--max-line-length=120"
     ],
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.formatting.provider": "black"
 }

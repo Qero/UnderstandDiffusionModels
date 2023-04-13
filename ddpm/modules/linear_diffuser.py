@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from torch import math
 
 
 class LinearDifuser(nn.Module):
@@ -17,10 +16,10 @@ class LinearDifuser(nn.Module):
         self._tilde_alpha = torch.cumprod(1 - self._noise_variance, dim=0)
 
     def _schedule(self, step):
-        assert step > 0
+        assert step >= 0
         assert step < self._max_step
-        signal_rate = math.sqrt(self._tilde_alpha[step])
-        noise_rate = math.sqrt(1 - self._tilde_alpha[step])
+        signal_rate = torch.sqrt(self._tilde_alpha[step])
+        noise_rate = torch.sqrt(1 - self._tilde_alpha[step])
         return signal_rate, noise_rate
 
     @property
