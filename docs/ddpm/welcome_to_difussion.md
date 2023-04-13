@@ -107,7 +107,7 @@ def step_embedding(step):
 
 ![](screenshot-20230413-161018.png)
 
-SD模型的核心还是中间的这个扩散模型，不过增多了几个关键部件，一个处理Prompt的文本模型和一个压缩图片的自编码器，还有在上图没显示的一个关键组件--在采样过程中融合文本特征和图像特征的CrossAttention。当然SD的新特性显然不止这些，还有各种finetune的技巧（例如[LoRA](https://github.com/cloneofsimo/lora)、[LoHa](https://openreview.net/pdf?id=d71n4ftoCBy)\[LyCORIS](https://github.com/KohakuBlueleaf/LyCORIS)等）。限于篇幅，对SD的详细说明就不在此处进行了，待后面在本地实现SD后，再来写一篇分享吧~
+SD模型的核心还是中间的这个扩散模型，不过增多了几个关键部件，一个处理Prompt的文本模型和一个压缩图片的自编码器，还有在上图没显示的一个关键组件--在采样过程中融合文本特征和图像特征的CrossAttention。当然SD的新特性显然不止这些，还有各种finetune的技巧（例如[LoRA](https://github.com/cloneofsimo/lora)、[LoHa](https://openreview.net/pdf?id=d71n4ftoCBy)、[LyCORIS](https://github.com/KohakuBlueleaf/LyCORIS)等）。限于篇幅，对SD的详细说明就不在此处进行了，待后面在本地实现SD后，再来写一篇分享吧~
 
 ## Refs.
 1. [DDPM](https://arxiv.org/abs/2006.11239) 必看
