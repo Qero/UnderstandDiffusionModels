@@ -1,6 +1,7 @@
 
 
 import ssl
+import math
 ssl._create_default_https_context = ssl._create_unverified_context
 
 import torch
@@ -18,6 +19,8 @@ STD = np.array([0.2542, 0.2241, 0.2903])
 
 
 def linear_schedule(step, min_variance=10**-4, max_variance=0.02, max_step=1000):
+    if step < 0:
+        return 1.0, 0.0
     noise_variance = torch.linspace(min_variance, max_variance, max_step)
     tilde_alpha = torch.cumprod(1 - noise_variance, dim=0)
     signal_rate = torch.sqrt(tilde_alpha[step])
@@ -54,10 +57,15 @@ def show_once():
             pred_noise = model(mixed, torch.tensor([step]))
 
             signal_rate, noise_rate = linear_schedule(step-1)
+            next_signal_rate, next_noise_rate = linear_schedule(step-2)
             pred_img = (mixed - noise_rate * pred_noise) / signal_rate
 
-            next_signal_rate, next_noise_rate = linear_schedule(step-2)
-            mixed = next_signal_rate * pred_img + next_noise_rate * pred_noise
+            # ddim
+            # mixed = next_signal_rate * pred_img + next_noise_rate * pred_noise
+
+            # ddpm
+            eta = next_noise_rate / noise_rate * math.sqrt(1 - (signal_rate ** 2) / (next_signal_rate ** 2))
+            mixed = next_signal_rate * pred_img + math.sqrt(1 - next_signal_rate ** 2 - eta**2) * pred_noise + eta * torch.normal(0, 1, (1, 3, 128, 128)).cpu()
 
             if step in (751, 501, 251, 1):
                 pred_img = torch.permute(pred_img.cpu()[0], (1, 2, 0)).detach().numpy()
@@ -102,10 +110,16 @@ def show_multi():
             pred_noise = model(mixed, torch.ones(9) * step)
 
             signal_rate, noise_rate = linear_schedule(step-1)
+            next_signal_rate, next_noise_rate = linear_schedule(step-2)
+
             pred_img = (mixed - noise_rate * pred_noise) / signal_rate
 
-            next_signal_rate, next_noise_rate = linear_schedule(step-2)
-            mixed = next_signal_rate * pred_img + next_noise_rate * pred_noise
+            # ddim
+            # mixed = next_signal_rate * pred_img + next_noise_rate * pred_noise
+
+            # ddpm
+            eta = next_noise_rate / noise_rate * math.sqrt(1 - (signal_rate ** 2) / (next_signal_rate ** 2))
+            mixed = next_signal_rate * pred_img + math.sqrt(1 - next_signal_rate ** 2 - eta**2) * pred_noise + eta * torch.normal(0, 1, (9, 3, 128, 128)).cpu()
             print(step)
             if step % 24 == 0 or step in (1000, 1):
                 imgs.append(tensor_to_pil_img(_3x3_grid(pred_img), MEAN, STD))
@@ -125,4 +139,4 @@ def show_multi():
 
 if __name__ == '''__main__''':
     show_once()
-    # show_multi()
+    show_multi()
